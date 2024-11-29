@@ -310,7 +310,7 @@
       :on-blur handle-blur}]))
 
 (mf/defc mentions-panel
-  [{:keys [users]}]
+  [{:keys [profiles]}]
 
   (let [mentions-str (mf/use-ctx mentions-context)
 
@@ -324,7 +324,7 @@
         mentions-users
         (mf/use-memo
          (mf/deps mention-filter)
-         #(->> (vals users)
+         #(->> (vals profiles)
                (filter
                 (fn [{:keys [fullname email]}]
                   (or (not mention-filter)
@@ -345,7 +345,7 @@
                         (dom/get-data "user-id")
                         (uuid/uuid))]
              (rx/push! mentions-str {:type :insert-mention
-                                     :data {:user (get users id)}}))))]
+                                     :data {:user (get profiles id)}}))))]
 
     (mf/use-effect
      (mf/deps mentions-users selected)
@@ -527,9 +527,8 @@
           :disabled disabled?}]])]))
 
 (mf/defc draft-thread
-  [{:keys [draft zoom on-cancel on-submit position-modifier]}]
+  [{:keys [draft zoom profiles on-cancel on-submit position-modifier]}]
   (let [mentions-str (mf/use-memo #(rx/subject))
-        users (mf/deref refs/current-file-comments-users)
         position (cond-> (:position draft)
                    (some? position-modifier)
                    (gpt/transform position-modifier))
@@ -598,7 +597,7 @@
                                       :global/disabled disabled?)
                  :disabled disabled?}]]]
 
-      [:& mentions-panel {:users users}]]]))
+      [:& mentions-panel {:profiles profiles}]]]))
 
 (mf/defc edit-form
   [{:keys [content on-submit on-cancel] :as props}]
@@ -833,20 +832,20 @@
 
         [:div {:class (stl/css :comments)}
          [:& comment-item {:comment comment
-                          :profiles profiles
+                           :profiles profiles
                            :thread thread
                            :origin origin}]
          (for [item (rest comments)]
            [:* {:key (dm/str (:id item))}
             [:& comment-item {:comment item
-                             :profiles profiles
+                              :profiles profiles
                               :origin origin}]])]
 
         [:& reply-form {:thread thread}]
 
         [:div {:ref ref}]
 
-        [:& mentions-panel {:users users}]])]))
+        [:& mentions-panel {:profiles profiles}]])]))
 
 (defn use-buble
   [zoom {:keys [position frame-id]}]
