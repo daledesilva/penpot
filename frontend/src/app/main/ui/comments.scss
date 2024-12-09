@@ -25,6 +25,7 @@
 }
 
 .author {
+  @include bodySmallTypography;
   display: flex;
   align-items: center;
   gap: $s-8;
@@ -95,6 +96,7 @@
 }
 
 .replies {
+  @include bodySmallTypography;
   display: flex;
   gap: $s-8;
   .total-replies {
@@ -117,7 +119,7 @@
   flex-direction: column;
   gap: $s-16;
   width: $s-284;
-  padding: $s-4 $s-12 $s-8 $s-12;
+  padding: $s-8 $s-12 $s-8 $s-12;
   pointer-events: auto;
   user-select: text;
   border-radius: $br-8;

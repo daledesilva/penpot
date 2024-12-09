@@ -90,13 +90,13 @@
 
        (if (seq tgroups)
          [:div {:class (stl/css :thread-groups)}
-          [:& cmt/comment-thread-group
+          [:> cmt/comment-dashboard-thread-group*
            {:group (first tgroups)
             :on-thread-click on-navigate
             :show-file-name true
             :profiles profiles}]
           (for [tgroup (rest tgroups)]
-            [:& cmt/comment-thread-group
+            [:> cmt/comment-dashboard-thread-group*
              {:group tgroup
               :on-thread-click on-navigate
               :show-file-name true

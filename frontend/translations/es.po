@@ -2013,6 +2013,26 @@ msgstr "Renombrar"
 msgid "labels.rename-team"
 msgstr "Renombra el equipo"
 
+#: src/app/main/ui/comments.cljs:145
+msgid "labels.reply"
+msgstr "respuesta"
+
+#: src/app/main/ui/comments.cljs:150
+msgid "labels.reply.new"
+msgstr "nueva respuesta"
+
+#: src/app/main/ui/comments.cljs:188
+msgid "labels.reply.thread"
+msgstr "Responder"
+
+#: src/app/main/ui/comments.cljs:146
+msgid "labels.replies"
+msgstr "respuestas"
+
+#: src/app/main/ui/comments.cljs:151
+msgid "labels.replies.new"
+msgstr "nuevas respuestas"
+
 #: src/app/main/ui/dashboard/team.cljs:681
 msgid "labels.resend-invitation"
 msgstr "Reenviar invitacion"

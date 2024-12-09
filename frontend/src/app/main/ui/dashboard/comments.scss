@@ -95,13 +95,3 @@
   flex-grow: 1;
   text-transform: uppercase;
 }
-
-.close-btn {
-  @include buttonStyle;
-  @include flexCenter;
-}
-
-.close-icon {
-  @extend .button-icon;
-  stroke: var(--icon-foreground);
-}
