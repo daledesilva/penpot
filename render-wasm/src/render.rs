@@ -322,31 +322,31 @@ impl RenderState {
                 let typeface = font_mgr
                      .new_from_data(ROBOTO_REGULAR, None)
                      .expect("Failed to load ROBOTO font");
-                // let default_font = skia::Font::new(typeface.clone(), 10.0);
+
+                let typeface_font_provider = {
+                    let mut typeface_font_provider = skia::textlayout::TypefaceFontProvider::new();
+                    // We need a system font manager to be able to load typefaces.
+                    let font_mgr = skia::FontMgr::new();
+                    let typeface = font_mgr
+                        .new_from_data(ROBOTO_REGULAR, None)
+                        .expect("Failed to load Ubuntu font");
             
-                // let typeface_font_provider = {
-                //     let mut typeface_font_provider = skia::textlayout::TypefaceFontProvider::new();
-                //     // We need a system font manager to be able to load typefaces.
-                //     typeface_font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
-                //     typeface_font_provider
-                // };
-
-                // Crear un proveedor de fuentes
-                let mut font_provider = skia::textlayout::TypefaceFontProvider::new();
-                // let typeface = skia::Typeface::new_from_data(ROBOTO_REGULAR, None)
-                // .expect("No se pudo cargar la fuente");
-                font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
+                    typeface_font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
+                    typeface_font_provider
+                };
+            
                 let mut font_collection = skia::textlayout::FontCollection::new();
-                font_collection.set_typeface_font_provider(font_provider);
-                let font_mgr = font_collection.font_mgr().unwrap();
+                font_collection.set_default_font_manager(Some(typeface_font_provider.into()), None);
+
+                let font_mgr_2 = font_collection.fallback_manager().unwrap();
 
 
-println!("Number of families: {}", font_mgr.count_families());
+println!("Number of families: {}", font_mgr_2.count_families());
 
- for i in 0..font_mgr.count_families() {
-            let name = font_mgr.family_name(i);
+ for i in 0..font_mgr_2.count_families() {
+            let name = font_mgr_2.family_name(i);
             println!("font_family: {name}");
-            let mut style_set = font_mgr.new_style_set(i);
+            let mut style_set = font_mgr_2.new_style_set(i);
             for style_index in 0..style_set.count() {
                 let (_, style_name) = style_set.style(style_index);
                 if let Some(style_name) = style_name {
@@ -357,7 +357,7 @@ println!("Number of families: {}", font_mgr.count_families());
             }
         }
 
-                let dom = skia::svg::Dom::from_str(svg, font_mgr).unwrap();
+                let dom = skia::svg::Dom::from_str(svg, font_mgr_2).unwrap();
                 dom.render(canvas);
 
             }
