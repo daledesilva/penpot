@@ -9,7 +9,7 @@ use crate::math::Rect;
 use crate::shapes::{draw_image_in_container, Fill, Image, Kind, Shape};
 use crate::view::Viewbox;
 
-static ROBOTO_REGULAR: &[u8] = include_bytes!("RobotoMono-Regular.ttf");
+static ROBOTO_REGULAR: &[u8] = include_bytes!("fonts/RobotoMono-Regular.ttf");
 static TYPEFACE_ALIAS: &str = "roboto-regular";
 
 struct GpuState {
@@ -326,11 +326,11 @@ impl RenderState {
                     let typeface = font_mgr
                         .new_from_data(ROBOTO_REGULAR, None)
                         .expect("Failed to load Ubuntu font");
-            
+
                     typeface_font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
                     typeface_font_provider
                 };
-            
+
                 let mut font_collection = skia::textlayout::FontCollection::new();
                 font_collection.set_default_font_manager(Some(typeface_font_provider.into()), None);
                 let font_mgr_2 = font_collection.fallback_manager().unwrap();
