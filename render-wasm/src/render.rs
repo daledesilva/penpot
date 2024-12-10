@@ -299,10 +299,6 @@ impl RenderState {
                 }
             }
             (_, Kind::Rect(rect)) => {
-                // self.drawing_surface
-                //     .canvas()
-                //     .draw_rect(rect, &fill.to_paint(&selrect));
-
                 let svg = r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" height = "2560" width = "2560">
                     <path d="M30,1h40l29,29v40l-29,29h-40l-29-29v-40z" stroke="#;000" fill="none"/>
                     <path d="M31,3h38l28,28v38l-28,28h-38l-28-28v-38z" fill="#a23"/>
@@ -337,26 +333,7 @@ impl RenderState {
             
                 let mut font_collection = skia::textlayout::FontCollection::new();
                 font_collection.set_default_font_manager(Some(typeface_font_provider.into()), None);
-
                 let font_mgr_2 = font_collection.fallback_manager().unwrap();
-
-
-println!("Number of families: {}", font_mgr_2.count_families());
-
- for i in 0..font_mgr_2.count_families() {
-            let name = font_mgr_2.family_name(i);
-            println!("font_family: {name}");
-            let mut style_set = font_mgr_2.new_style_set(i);
-            for style_index in 0..style_set.count() {
-                let (_, style_name) = style_set.style(style_index);
-                if let Some(style_name) = style_name {
-                    println!("  style: {style_name}");
-                }
-                let face = style_set.new_typeface(style_index);
-                drop(face);
-            }
-        }
-
                 let dom = skia::svg::Dom::from_str(svg, font_mgr_2).unwrap();
                 dom.render(canvas);
 
