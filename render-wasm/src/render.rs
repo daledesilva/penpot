@@ -9,6 +9,9 @@ use crate::math::Rect;
 use crate::shapes::{draw_image_in_container, Fill, Image, Kind, Shape};
 use crate::view::Viewbox;
 
+static ROBOTO_REGULAR: &[u8] = include_bytes!("RobotoMono-Regular.ttf");
+static TYPEFACE_ALIAS: &str = "roboto-regular";
+
 struct GpuState {
     pub context: DirectContext,
     framebuffer_info: FramebufferInfo,
@@ -296,9 +299,67 @@ impl RenderState {
                 }
             }
             (_, Kind::Rect(rect)) => {
-                self.drawing_surface
-                    .canvas()
-                    .draw_rect(rect, &fill.to_paint(&selrect));
+                // self.drawing_surface
+                //     .canvas()
+                //     .draw_rect(rect, &fill.to_paint(&selrect));
+
+                let svg = r##"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" height = "2560" width = "2560">
+                    <path d="M30,1h40l29,29v40l-29,29h-40l-29-29v-40z" stroke="#;000" fill="none"/>
+                    <path d="M31,3h38l28,28v38l-28,28h-38l-28-28v-38z" fill="#a23"/>
+                    <text font-family="" x="50" y="68" font-size="48" fill="#FFF" text-anchor="middle"><![CDATA[410]]></text>
+                    <image x="100" y="100" width="256" height="256" xlink:href="data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAw
+                      AAAC8IyPqcvt3wCcDkiLc7C0qwyGHhSWpjQu5yqmCYsapyuvUUlvONmOZtfzgFz
+                      ByTB10QgxOR0TqBQejhRNzOfkVJ+5YiUqrXF5Y5lKh/DeuNcP5yLWGsEbtLiOSp
+                      a/TPg7JpJHxyendzWTBfX0cxOnKPjgBzi4diinWGdkF8kjdfnycQZXZeYGejmJl
+                      ZeGl9i2icVqaNVailT6F5iJ90m6mvuTS4OK05M0vDk0Q4XUtwvKOzrcd3iq9uis
+                      F81M1OIcR7lEewwcLp7tuNNkM3uNna3F2JQFo97Vriy/Xl4/f1cf5VWzXyym7PH
+                      hhx4dbgYKAAA7"/>
+                    </svg>"##;
+
+                let canvas = self.drawing_surface.canvas();
+
+                let font_mgr = skia::FontMgr::new();
+                let typeface = font_mgr
+                     .new_from_data(ROBOTO_REGULAR, None)
+                     .expect("Failed to load ROBOTO font");
+                // let default_font = skia::Font::new(typeface.clone(), 10.0);
+            
+                // let typeface_font_provider = {
+                //     let mut typeface_font_provider = skia::textlayout::TypefaceFontProvider::new();
+                //     // We need a system font manager to be able to load typefaces.
+                //     typeface_font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
+                //     typeface_font_provider
+                // };
+
+                // Crear un proveedor de fuentes
+                let mut font_provider = skia::textlayout::TypefaceFontProvider::new();
+                // let typeface = skia::Typeface::new_from_data(ROBOTO_REGULAR, None)
+                // .expect("No se pudo cargar la fuente");
+                font_provider.register_typeface(typeface, TYPEFACE_ALIAS);
+                let mut font_collection = skia::textlayout::FontCollection::new();
+                font_collection.set_typeface_font_provider(font_provider);
+                let font_mgr = font_collection.font_mgr().unwrap();
+
+
+println!("Number of families: {}", font_mgr.count_families());
+
+ for i in 0..font_mgr.count_families() {
+            let name = font_mgr.family_name(i);
+            println!("font_family: {name}");
+            let mut style_set = font_mgr.new_style_set(i);
+            for style_index in 0..style_set.count() {
+                let (_, style_name) = style_set.style(style_index);
+                if let Some(style_name) = style_name {
+                    println!("  style: {style_name}");
+                }
+                let face = style_set.new_typeface(style_index);
+                drop(face);
+            }
+        }
+
+                let dom = skia::svg::Dom::from_str(svg, font_mgr).unwrap();
+                dom.render(canvas);
+
             }
             (_, Kind::Path(path)) => {
                 self.drawing_surface
