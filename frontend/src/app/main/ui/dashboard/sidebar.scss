@@ -32,6 +32,16 @@
   overflow-y: auto;
 }
 
+.separator {
+  height: $s-1;
+  width: 94%;
+  margin-left: 3%;
+}
+
+.overflow-separator {
+  border-bottom: $s-1 solid var(--color-background-quaternary);
+}
+
 // SIDEBAR TEAM SWITCH
 .sidebar-team-switch {
   position: relative;
@@ -390,4 +400,30 @@
 .exit-icon {
   @extend .button-icon;
   stroke: var(--icon-foreground);
+}
+
+.upgrade-plan-section {
+  display: flex;
+  justify-content: space-between;
+  border: $s-1 solid var(--color-background-quaternary);
+  border-radius: $s-8;
+  padding: $s-12;
+  margin: $s-12 $s-8 $s-12 $s-12;
+  color: var(--color-foreground-secondary);
+  cursor: pointer;
+}
+
+.penpot-free {
+  display: flex;
+  flex-direction: column;
+  font-size: $fs-14;
+}
+
+.no-limits {
+  font-size: $fs-12;
+}
+
+.power-up {
+  font-size: $fs-12;
+  color: var(--color-accent-tertiary);
 }
