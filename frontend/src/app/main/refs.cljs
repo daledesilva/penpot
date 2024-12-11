@@ -71,12 +71,22 @@
 (def files
   (l/derived :files st/state))
 
+(def file
+  "A derived state that points to the current file"
+  (l/derived (fn [state]
+               (let [file-id (:current-file-id state)
+                     files   (:files state)]
+                 (get files file-id)))
+             st/state))
+
 (def shared-files
   "A derived state that points to the current list of shared
   files (without the content, only summary)"
   (l/derived :shared-files st/state))
 
 (def libraries
+  "A derived state that contanins the currently loaded
+  shared libraries with all its content"
   (l/derived :libraries st/state))
 
 (defn extract-selected-files

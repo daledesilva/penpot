@@ -53,9 +53,7 @@
 (def ^:private library-icon
   (i/icon-xref :library (stl/css :library-icon)))
 
-(def ref:workspace-file
-  (l/derived :workspace-file st/state))
-
+;; FIXME: should be simplified (and performance fixed)
 (defn create-file-library-ref
   [library-id]
   (letfn [(getter-fn [state]
@@ -551,8 +549,10 @@
   {::mf/register modal/components
    ::mf/register-as :libraries-dialog}
   [{:keys [starting-tab] :as props :or {starting-tab :libraries}}]
-  (let [file-data      (mf/deref refs/workspace-data)
-        file           (mf/deref ref:workspace-file)
+  (let [;; NOTE: we don't want to react on file changes, we just want
+        ;; a snapshot of file on the momento of open the dialog
+        file           (deref refs/file)
+        file-data      (:data file)
 
         file-id        (:id file)
         shared?        (:is-shared file)

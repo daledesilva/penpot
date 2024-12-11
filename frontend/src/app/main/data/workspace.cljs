@@ -176,8 +176,8 @@
 
     ptk/WatchEvent
     (watch [_ state _]
-      (let [file-id       (dm/get-in state [:workspace-file :id])
-            ignore-until  (dm/get-in state [:workspace-file :ignore-sync-until])
+      (let [file-id       (:current-file-id state)
+            ignore-until  (dm/get-in state [:files file-id :ignore-sync-until])
             needs-check?  (some #(and (> (:modified-at %) (:synced-at %))
                                       (or (not ignore-until)
                                           (> (:modified-at %) ignore-until)))
@@ -240,10 +240,14 @@
 
     ptk/UpdateEvent
     (update [_ state]
-      (-> state
-          (assoc :thumbnails thumbnails)
-          (assoc :workspace-file (dissoc file :data))
-          (assoc :workspace-data (:data file))))
+      (let [file-id (:id file)]
+        (-> state
+            (assoc :thumbnails thumbnails)
+            ;; FIXME: remove
+            (assoc :workspace-file (dissoc file :data))
+            (assoc :workspace-data (:data file))
+            (update :files assoc file-id file)
+            (update :libraries assoc file-id file))))
 
     ptk/WatchEvent
     (watch [_ state _]
