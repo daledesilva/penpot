@@ -193,11 +193,6 @@ pub extern "C" fn add_shape_fill_stops(ptr: *mut shapes::RawStopData, n_stops: u
 }
 
 #[no_mangle]
-pub extern "C" fn set_shape_svg_raw_content() {
-    println!("Not implemented yet");
-}
-
-#[no_mangle]
 pub extern "C" fn store_image(a: u32, b: u32, c: u32, d: u32, size: u32) {
     let state = unsafe { STATE.as_mut() }.expect("got an invalid state pointer");
     let id = uuid_from_u32_quartet(a, b, c, d);
@@ -249,6 +244,24 @@ pub extern "C" fn clear_shape_fills() {
     if let Some(shape) = state.current_shape() {
         shape.clear_fills();
     }
+}
+
+#[no_mangle]
+pub extern "C" fn set_shape_svg_raw_content(size: u32) {
+    unsafe {
+        let str = String::from_raw_parts(mem::buffer_ptr(), size as usize, size as usize);
+        println!("String {}", str);
+    }
+    /*
+    let state = unsafe { STATE.as_mut() }.expect("got an invalid state pointer");
+    if let Some(shape) = state.current_shape() {
+        unsafe {
+            let svg_raw_content = String::from_raw_parts(mem::buffer_ptr(), size as usize, size as usize);
+            shape.set_svg_raw_content(svg_raw_content, &state.render_state.font_mgr);
+        }
+    }
+    */
+
 }
 
 #[no_mangle]
