@@ -189,13 +189,23 @@
 
 (defn set-shape-path-content
   [content]
-  (let [buffer (path/content->buffer content)
-        size (.-byteLength buffer)
-        ptr (h/call internal-module "_alloc_bytes" size)
+  (let [buffer    (path/content->buffer content)
+        size      (.-byteLength buffer)
+        ptr       (h/call internal-module "_alloc_bytes" size)
         heap      (gobj/get ^js internal-module "HEAPU8")
         mem       (js/Uint8Array. (.-buffer heap) ptr size)]
     (.set mem (js/Uint8Array. buffer))
     (h/call internal-module "_set_shape_path_content")))
+
+(defn set-shape-svg-raw-content
+  [_] ;; <- content
+  #_(prn "content" content)
+  (let [content "Hello, World! kk"
+        size (+ (count content) 1)
+        ptr (h/call internal-module "_alloc_bytes" size)]
+    (h/call internal-module "stringToUTF8" content ptr size)
+    (h/call internal-module "_set_shape_svg_raw_content" size)
+    #_(h/call internal-module "_free_bytes")))
 
 (defn- translate-blend-mode
   [blend-mode]
@@ -269,7 +279,13 @@
               (set-shape-children children)
               (set-shape-opacity opacity)
               (set-shape-hidden hidden)
-              (when (and (some? content) (= type :path)) (set-shape-path-content content))
+              (cond
+                (and (some? content) (= type :path))
+                (set-shape-path-content content)
+
+                (and (some? content) (= type :svg-raw))
+                (set-shape-svg-raw-content content))
+
               (let [pending-fills (doall (set-shape-fills fills))]
                 (recur (inc index) (into pending pending-fills))))
             pending))]

@@ -1,5 +1,5 @@
 use crate::math;
-use skia_safe as skia;
+use skia_safe::{self as skia, Rect};
 
 pub type Image = skia::Image;
 
@@ -19,6 +19,8 @@ pub fn draw_image_in_container(
     let container = match kind {
         Kind::Rect(r) => r.to_owned(),
         Kind::Path(p) => p.to_skia_path().bounds().to_owned(),
+        // TODO: Implement SVGRaw bounds.
+        Kind::SVGRaw(sr) => Rect::new_empty(),
     };
 
     // Container size
@@ -55,6 +57,9 @@ pub fn draw_image_in_container(
         }
         Kind::Path(p) => {
             canvas.clip_path(&p.to_skia_path(), skia::ClipOp::Intersect, true);
+        },
+        Kind::SVGRaw(_) => {
+            canvas.clip_rect(container, skia::ClipOp::Intersect, true);
         }
     }
 

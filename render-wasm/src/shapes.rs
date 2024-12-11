@@ -6,15 +6,18 @@ mod blend;
 mod fills;
 mod images;
 mod paths;
+mod svgraw;
 pub use blend::*;
 pub use fills::*;
 pub use images::*;
 pub use paths::*;
+pub use svgraw::*;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Kind {
     Rect(math::Rect),
     Path(Path),
+    SVGRaw(SVGRaw),
 }
 
 pub type Color = skia::Color;
@@ -121,6 +124,11 @@ impl Shape {
     pub fn set_path_segments(&mut self, buffer: Vec<RawPathData>) -> Result<(), String> {
         let p = Path::try_from(buffer)?;
         self.kind = Kind::Path(p);
+        Ok(())
+    }
+
+    pub fn set_svg_raw_content(&mut self, content: String) -> Result<(), String> {
+        self.kind = Kind::SVGRaw(SVGRaw::from_content(content));
         Ok(())
     }
 

@@ -250,7 +250,7 @@ pub extern "C" fn clear_shape_fills() {
 pub extern "C" fn set_shape_svg_raw_content(size: u32) {
     unsafe {
         let str = String::from_raw_parts(mem::buffer_ptr(), size as usize, size as usize);
-        println!("String {}", str);
+        println!("String: {}", str);
     }
     /*
     let state = unsafe { STATE.as_mut() }.expect("got an invalid state pointer");

@@ -143,8 +143,8 @@ impl RenderState {
         }
     }
 
-    pub fn add_font(&mut self, name: String, ) {
-
+    pub fn add_font(&mut self, name: String) {
+        println!("Not implemented");
     }
 
     pub fn add_image(&mut self, id: Uuid, image_data: &[u8]) -> Result<(), String> {
@@ -340,6 +340,11 @@ impl RenderState {
                     .canvas()
                     .draw_path(&path.to_skia_path(), &fill.to_paint(&selrect));
             },
+            (_, Kind::SVGRaw(sr)) => {
+                // FIXME:
+                let dom = skia::svg::Dom::from_str(sr.content.to_string(), self.font_mgr.clone()).unwrap();
+                dom.render(self.drawing_surface.canvas());
+            }
         }
     }
 
