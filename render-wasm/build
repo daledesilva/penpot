@@ -35,7 +35,7 @@ if [ "$_BUILD_MODE" = "release" ]; then
     _CARGO_PARAMS="--release $_CARGO_PARAMS"
 fi
 
-export SKIA_BINARIES_URL="file:///home/penpot/penpot/render-wasm/skia-binaries-9e7d2684a17084095aef-wasm32-unknown-emscripten-gl-svg-textlayout-binary-cache.tar.gz"
+export SKIA_BINARIES_URL="https://github.com/penpot/skia-binaries/releases/download/0.80.1-1/skia-binaries-9e7d2684a17084095aef-wasm32-unknown-emscripten-gl-svg-textlayout.tar.gz"
 
 pushd $_SCRIPT_DIR;
 cargo build $_CARGO_PARAMS
