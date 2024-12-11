@@ -9,7 +9,6 @@ HASH="$(git rev-parse --short=20 HEAD)"
 TARGET="wasm32-unknown-emscripten"
 OUTPUT_FILE=skia-binaries-$HASH-$TARGET-"$(echo "$SKIA_FEATURES" | tr ',' '-')".tar.gz
 BUILD_PATH=$(cargo build -p skia-safe --release --features "$SKIA_FEATURES" --target $TARGET -q --message-format=json | jq -r 'select((.reason == "build-script-executed") and (.package_id | contains("skia-bindings")) ) | .linked_paths | first')
-# cargo build -p skia-safe --release --features "$SKIA_FEATURES" --target $TARGET -q --message-format=json | jq '.packages[] | select(.name == "asdasd") | .readme'
 popd
 
 echo "BUILD_PATH: " $BUILD_PATH
