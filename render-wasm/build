@@ -8,6 +8,9 @@ fi
 
 export EMCC_CFLAGS="--no-entry \
     -Os \
+    --pre-js ${PWD}/js/pre.js \
+    --post-js ${PWD}/js/post.js \
+    -sASSERTIONS=1 \
     -sALLOW_TABLE_GROWTH=1 \
     -sALLOW_MEMORY_GROWTH=1 \
     -sENVIRONMENT=web \
